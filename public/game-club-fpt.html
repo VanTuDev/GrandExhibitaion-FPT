@@ -11,6 +11,9 @@
   --ink:#12100c;--paper:#f8f4ec;--grey:#b8b0a0;--dgrey:#7a7268;
   --sbot:env(safe-area-inset-bottom,0px);--stop:env(safe-area-inset-top,0px);
   --sidebar:52px;
+  --panel-bg: rgba(14, 12, 10, 0.94);
+  --glass-bg: rgba(255, 255, 255, 0.04);
+  --glass-border: rgba(201, 168, 76, 0.2);
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 html,body{width:100%;height:100%;overflow:hidden;touch-action:none;}
@@ -82,8 +85,15 @@ body{background:var(--ink);user-select:none;font-family:'EB Garamond',serif;}
   animation:introGlow 4.5s ease-in-out infinite;
 }
 @keyframes introGlow{
-  0%,100%{opacity:.4;}
-  50%{opacity:.9;}
+  0%,100%{opacity:.4; transform: scale(1);}
+  50%{opacity:.9; transform: scale(1.02);}
+}
+@keyframes floatAnim{
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+.intro-card {
+  animation: floatAnim 6s ease-in-out infinite;
 }
 .intro-head{text-align:center;font-family:'Cinzel',serif;color:var(--gold2);letter-spacing:3px;text-transform:uppercase;font-size:clamp(12px,2.1vw,20px);}
 .intro-sub{text-align:center;color:var(--grey);font-family:'Josefin Sans',sans-serif;letter-spacing:2px;text-transform:uppercase;font-size:clamp(8px,1.2vw,10px);}
@@ -172,8 +182,37 @@ body{background:var(--ink);user-select:none;font-family:'EB Garamond',serif;}
 #gameCanvas{display:block;position:absolute;inset:0;}
 
 /* ══ HUD (top-left) ══ */
-#pInfo{position:fixed;top:calc(10px + var(--stop));left:10px;background:rgba(14,12,8,.93);border:1px solid rgba(201,168,76,.28);border-top:2px solid var(--gold);padding:7px 13px;font-family:'Josefin Sans',sans-serif;font-size:6.5px;letter-spacing:1.5px;color:var(--gold2);line-height:2.3;text-transform:uppercase;z-index:80;pointer-events:none;}
-#mm{position:fixed;top:calc(10px + var(--stop));right:calc(var(--sidebar) + 10px);width:116px;height:92px;background:rgba(14,12,8,.94);border:1px solid rgba(201,168,76,.26);border-top:2px solid var(--gold);overflow:hidden;z-index:80;pointer-events:none;}
+#pInfo{
+  position:fixed;top:calc(15px + var(--stop));left:15px;
+  background:var(--panel-bg);
+  backdrop-filter: blur(12px);
+  border:1px solid var(--glass-border);
+  border-top:2px solid var(--gold);
+  padding:12px 18px;
+  font-family:'Josefin Sans',sans-serif;
+  font-size:13px;
+  letter-spacing:1px;
+  color:var(--gold2);
+  line-height:1.8;
+  text-transform:uppercase;
+  z-index:80;
+  pointer-events:none;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+#pInfo div {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  border-bottom: 1px solid rgba(201,168,76,0.1);
+  padding-bottom: 2px;
+}
+#pInfo div:last-child { border-bottom: none; }
+#pInfo b { color: var(--goldlt); font-weight: 600; }
+
+#mm{position:fixed;top:calc(15px + var(--stop));right:calc(var(--sidebar) + 15px);width:116px;height:92px;background:rgba(14,12,8,.94);border:1px solid rgba(201,168,76,.26);border-top:2px solid var(--gold);overflow:hidden;z-index:80;pointer-events:none;}
 #mmCanvas{width:100%;height:100%;}
 #mmLbl{position:absolute;bottom:2px;left:50%;transform:translateX(-50%);font-family:'Josefin Sans',sans-serif;font-size:5px;letter-spacing:2px;color:rgba(201,168,76,.55);text-transform:uppercase;}
 
@@ -431,7 +470,28 @@ body{background:var(--ink);user-select:none;font-family:'EB Garamond',serif;}
 #jThumb.active{box-shadow:0 0 14px rgba(201,168,76,.38);}
 
 /* ══ KEYBOARD HINT ══ */
-#kHint{position:fixed;bottom:calc(14px + var(--sbot));left:10px;background:rgba(10,8,6,.75);border-left:1px solid rgba(201,168,76,.18);padding:4px 9px;font-family:'Josefin Sans',sans-serif;font-size:5px;letter-spacing:1.5px;color:var(--dgrey);line-height:2.1;text-transform:uppercase;pointer-events:none;z-index:90;}
+/* ══ KEYBOARD HINT ══ */
+#kHint {
+  position: fixed;
+  bottom: calc(20px + var(--sbot));
+  left: 20px;
+  background: rgba(14, 12, 10, 0.85);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(201, 168, 76, 0.3);
+  border-left: 3px solid var(--gold);
+  padding: 12px 20px;
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 13px;
+  letter-spacing: 1px;
+  color: #d0c8b8;
+  line-height: 1.6;
+  text-transform: uppercase;
+  pointer-events: none;
+  z-index: 100;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  transition: all 0.3s ease;
+}
+#kHint b { color: var(--gold2); }
 
 /* ══ OVERLAY DIMMER for panels ══ */
 #panelDim{position:fixed;inset:0;right:var(--sidebar);background:rgba(0,0,0,.5);z-index:170;display:none;}
@@ -447,7 +507,7 @@ body{background:var(--ink);user-select:none;font-family:'EB Garamond',serif;}
   .intro-card{padding:14px;}
   :root{--sidebar:50px;}
   #mm{display:none;}
-  #pInfo{font-size:6px;padding:5px 9px;}
+  #pInfo{font-size:10px;padding:8px 12px; left: 10px; top: 10px;}
   #kHint{display:none;}
   .cd-img-col{width:clamp(100px,28%,160px);}
   .cd-section{padding:12px 14px;}
@@ -539,7 +599,7 @@ body{background:var(--ink);user-select:none;font-family:'EB Garamond',serif;}
     </div>
     <button class="sbtn" onclick="startGame()">◆ &nbsp; Bước Vào Triển Lãm &nbsp; ◆</button>
     <button class="back-btn" onclick="backToLanding()">← Quay lại landing page</button>
-    <div class="chint">WASD · SPACE: Giao tiếp · Sidebar phải: Tất cả hành động<br>📱 Mobile: Joystick trái · Nút sidebar phải</div>
+    <div class="chint"><b>WASD</b> · <b>SPACE</b>: Giao tiếp · Sidebar phải: Tất cả hành động<br>📱 Mobile: Joystick trái · Nút sidebar phải</div>
   </div>
 </div>
 
@@ -549,10 +609,10 @@ body{background:var(--ink);user-select:none;font-family:'EB Garamond',serif;}
 
   <!-- HUD -->
   <div id="pInfo">
-    <div id="hN">Khách: —</div>
-    <div id="hM">MSSV: —</div>
-    <div id="hV">Đã thăm: 0/10</div>
-    <div id="hS" style="color:var(--gold)">Điểm: 0</div>
+    <div id="hN"><span>🤵 KHÁCH:</span> <b id="hNv">—</b></div>
+    <div id="hM"><span>🆔 MSSV:</span> <b id="hMv">—</b></div>
+    <div id="hV"><span>🗺 ĐÃ THĂM:</span> <b id="hVv">0/10</b></div>
+    <div id="hS" style="color:var(--gold)"><span>✨ ĐIỂM:</span> <b id="hSv">0</b></div>
   </div>
   <div id="mm"><canvas id="mmCanvas" width="116" height="92"></canvas><div id="mmLbl">Sơ Đồ</div></div>
 
@@ -600,7 +660,10 @@ body{background:var(--ink);user-select:none;font-family:'EB Garamond',serif;}
   </div>
 
   <!-- Keyboard hint -->
-  <div id="kHint">WASD: Di chuyển · SPACE: Giao tiếp · G: Mini Game<br>H: Lịch sử · B: Nhiệm vụ · L: Thành tựu · ESC: Đóng</div>
+  <div id="kHint">
+    <div><b>WASD</b>: Di chuyển · <b>SPACE</b>: Giao tiếp · <b>G</b>: Mini Game</div>
+    <div><b>H</b>: Lịch sử · <b>B</b>: Nhiệm vụ · <b>L</b>: Thành tựu · <b>ESC</b>: Đóng</div>
+  </div>
 
   <!-- Club detail dialog (center card) -->
   <div id="clubDlg">
@@ -839,8 +902,9 @@ let txRolling=false,txBet='';
 // ══════════════════════════════════════════════
 const REWARDS=[
   {id:'bear',name:'Gấu bông FUDA',icon:'🧸',cost:60},
-  {id:'bag',name:'Túi Tote FUDA',icon:'👜',cost:80},
-  {id:'frog',name:'Huy hiệu Cóc Vàng',icon:'🐸',cost:40}
+  {id:'bag',name:'Túi Tote FUDA',icon:'👜',cost:40},
+  {id:'keychain',name:'Móc khóa FUDA',icon:'🔑',cost:20},
+  {id:'pen',name:'Bút FUDA',icon:'🖊️',cost:10}
 ];
 let redeemedGifts=[];
 
@@ -927,14 +991,16 @@ function buildLight(){
 // ══════════════════════════════════════════════
 function setupNPCs(){
   npcs=[];
-  const leftRows=[6,12,18,24,30],rightRows=[6,12,18,24,30];
+  // Tăng khoảng cách ra 7 TILE (thay vì 6) để các hàng rào không bị dính nhau
+  const leftRows=[5,12,19,26,33],rightRows=[5,12,19,26,33];
   const bw=4*TILE,bh=60+(bw-14);
   CLUBS.forEach((cl,i)=>{
     const isLeft=i<5;
     const bRow=isLeft?leftRows[i]:rightRows[i-5];
     const bx=isLeft?7*TILE:30*TILE;
     const by=bRow*TILE;
-    const npcX=isLeft?(bx+bw+TILE*.55):(bx-TILE*.55-20);
+    // NPC đứng ngay tại cổng của hàng rào
+    const npcX=isLeft?(bx+bw+20):(bx-40);
     const npcY=by+bh/2-14;
     npcs.push({...cl,x:npcX,y:npcY,w:20,h:28,dir:isLeft?3:1,fl:!isLeft,fr:0,ft:0,bob:Math.random()*Math.PI*2,isClub:true});
   });
@@ -957,12 +1023,56 @@ function setupObjs(){
   objs.push({t:'arch',x:17*TILE,y:40*TILE,w:9*TILE,h:TILE*2.5|0});
   [[6,4],[10,4],[14,4],[18,4],[23,4],[27,4],[31,4],[35,4],[6,14],[35,14],[6,26],[35,26]].forEach(([c,r])=>{objs.push({t:'col',x:c*TILE,y:r*TILE});solidR.push({x:c*TILE+6,y:r*TILE+6,w:TILE-12,h:TILE-12});});
   [[22,8],[22,16],[22,24],[12,14],[33,14],[12,28],[33,28]].forEach(([c,r])=>objs.push({t:'chand',x:c*TILE,y:r*TILE}));
-  const leftRows=[6,12,18,24,30],rightRows=[6,12,18,24,30],bw=4*TILE;
+  const leftRows=[5,12,19,26,33],rightRows=[5,12,19,26,33],bw=4*TILE;
   CLUBS.forEach((cl,i)=>{
     const isLeft=i<5,bx=isLeft?7*TILE:30*TILE,by=(isLeft?leftRows[i]:rightRows[i-5])*TILE,bh=60+(bw-14);
     objs.push({t:'booth',x:bx,y:by,w:bw,h:bh,color:cl.color,name:cl.name,full:cl.full,emoji:cl.emoji,ci:i,id:cl.id});
     solidR.push({x:bx,y:by,w:bw,h:bh});
-    objs.push({t:'rope',x:bx+4,y:by+bh+2,w:bw-8});
+    
+    // Add custom fence (spaced out, gate pointing to center)
+    const fw = bw + 80;
+    const fh = bh + 48;
+    const fx = isLeft ? bx - 16 : bx - 64;
+    const fy = by - 24;
+    objs.push({t:'fence',x:fx,y:fy,w:fw,h:fh,color:cl.color,isLeft:isLeft});
+    
+    // Fence collisions with side gate
+    const gapH = 64; // Cổng rộng 64px
+    solidR.push({x:fx,y:fy,w:fw,h:10}); // Top
+    solidR.push({x:fx,y:fy+fh-10,w:fw,h:10}); // Bottom
+    
+    if (isLeft) {
+      solidR.push({x:fx,y:fy,w:10,h:fh}); // Left (closed)
+      solidR.push({x:fx+fw-10,y:fy,w:10,h:fh/2-gapH/2}); // Right top
+      solidR.push({x:fx+fw-10,y:fy+fh/2+gapH/2,w:10,h:fh/2-gapH/2}); // Right bottom
+    } else {
+      solidR.push({x:fx+fw-10,y:fy,w:10,h:fh}); // Right (closed)
+      solidR.push({x:fx,y:fy,w:10,h:fh/2-gapH/2}); // Left top
+      solidR.push({x:fx,y:fy+fh/2+gapH/2,w:10,h:fh/2-gapH/2}); // Left bottom
+    }
+
+    // Add custom decor inside the fence
+    let decorType = '';
+    let dx = isLeft ? bx + bw + 16 : bx - 40;
+    let dy = by + 20;
+    
+    switch(cl.id) {
+      case 'fenious': decorType = 'pot'; break;
+      case 'fic': decorType = 'coins'; break;
+      case 'fum': decorType = 'camera'; break;
+      case 'mic': decorType = 'micStand'; break;
+      case 'tia': decorType = 'drum'; break;
+      case 'resup': decorType = 'board'; break;
+      case 'f2k': decorType = 'heartBox'; break;
+      case 'fvc': decorType = 'martialDummy'; break;
+      case 'src': decorType = 'serverNode'; break;
+      case 'dfp': decorType = 'boombox'; break;
+    }
+    if (decorType) {
+      objs.push({t:'decor',type:decorType,x:dx,y:dy});
+      solidR.push({x:dx+4,y:dy+10,w:24,h:24});
+    }
+
   });
   [[20,10],[23,10],[20,20],[23,20],[20,28],[23,28]].forEach(([c,r])=>{objs.push({t:'bench',x:c*TILE,y:r*TILE});solidR.push({x:c*TILE+2,y:r*TILE+2,w:TILE-4,h:TILE-4});});
   [8,15,22,29].forEach(r=>{objs.push({t:'win',x:5*TILE,y:r*TILE,side:'L'});objs.push({t:'win',x:38*TILE,y:r*TILE,side:'R'});});
@@ -1097,10 +1207,157 @@ function drawBooth(o){
   }
   if(visited.has(o.id)){ctx.fillStyle='rgba(201,168,76,.88)';ctx.fillRect(x+o.w-18,y+o.h-18,16,16);ctx.strokeStyle='rgba(245,228,160,.55)';ctx.strokeRect(x+o.w-18,y+o.h-18,16,16);ctx.fillStyle='#0a0804';ctx.font='bold 9px serif';ctx.textAlign='center';ctx.fillText('✓',x+o.w-10,y+o.h-5);ctx.textAlign='left';}
 }
-function drawRope(o){
+function drawFence(o){
   const x=o.x-cam.x,y=o.y-cam.y;
-  [x,x+o.w-4].forEach(px=>{ctx.fillStyle='#a08820';ctx.fillRect(px,y-14,4,16);const fg=sRad(px+2,y-14,0,px+2,y-14,5);if(fg){fg.addColorStop(0,'#f5e4a0');fg.addColorStop(1,'#9a7818');}ag(fg,'#e8c96a');ctx.beginPath();ctx.arc(px+2,y-14,5,0,Math.PI*2);ctx.fill();});
-  ctx.strokeStyle='rgba(100,35,28,.78)';ctx.lineWidth=2.3;ctx.beginPath();ctx.moveTo(x+2,y-12);ctx.quadraticCurveTo(x+o.w/2,y-4,x+o.w-2,y-12);ctx.stroke();ctx.lineWidth=1;
+  ctx.strokeStyle='rgba(201,168,76,.6)';ctx.lineWidth=2;
+  ctx.fillStyle='rgba(10,8,4,.3)';
+  ctx.beginPath();
+  // Draw floor area inside fence
+  ctx.rect(x,y,o.w,o.h);ctx.fill();
+  
+  const pd = 24, ps = 6;
+  ctx.fillStyle=o.color||'#c9a84c';
+  
+  // Top rail
+  ctx.fillRect(x,y,o.w,2);
+  for(let px=x;px<=x+o.w;px+=pd){ctx.fillRect(px-ps/2,y-4,ps,10);ctx.strokeStyle='rgba(201,168,76,.8)';ctx.strokeRect(px-ps/2,y-4,ps,10);}
+  
+  // Bottom rail
+  ctx.fillRect(x,y+o.h-2,o.w,2);
+  for(let px=x;px<=x+o.w;px+=pd){ctx.fillRect(px-ps/2,y+o.h-10,ps,10);ctx.strokeStyle='rgba(201,168,76,.8)';ctx.strokeRect(px-ps/2,y+o.h-10,ps,10);}
+  
+  const gapH = 64;
+  const midY = y + o.h/2;
+  
+  // Left rail
+  if (o.isLeft) {
+    ctx.fillRect(x,y,2,o.h);
+    for(let py=y;py<=y+o.h;py+=pd){ctx.fillRect(x-2,py-ps/2,6,ps);ctx.strokeRect(x-2,py-ps/2,6,ps);}
+  } else {
+    // Left has gate
+    ctx.fillRect(x,y,2,o.h/2-gapH/2);
+    ctx.fillRect(x,midY+gapH/2,2,o.h/2-gapH/2);
+    for(let py=y;py<=y+o.h;py+=pd){
+      if (py > midY - gapH/2 + 10 && py < midY + gapH/2 - 10) continue;
+      ctx.fillRect(x-2,py-ps/2,6,ps);ctx.strokeRect(x-2,py-ps/2,6,ps);
+    }
+  }
+  
+  // Right rail
+  if (!o.isLeft) {
+    ctx.fillRect(x+o.w,y,2,o.h);
+    for(let py=y;py<=y+o.h;py+=pd){ctx.fillRect(x+o.w-2,py-ps/2,6,ps);ctx.strokeRect(x+o.w-2,py-ps/2,6,ps);}
+  } else {
+    // Right has gate
+    ctx.fillRect(x+o.w,y,2,o.h/2-gapH/2);
+    ctx.fillRect(x+o.w,midY+gapH/2,2,o.h/2-gapH/2);
+    for(let py=y;py<=y+o.h;py+=pd){
+      if (py > midY - gapH/2 + 10 && py < midY + gapH/2 - 10) continue;
+      ctx.fillRect(x+o.w-2,py-ps/2,6,ps);ctx.strokeRect(x+o.w-2,py-ps/2,6,ps);
+    }
+  }
+  
+  // Gate pillars
+  ctx.fillStyle='rgba(201,168,76,.9)';
+  if (o.isLeft) {
+    ctx.fillRect(x+o.w-6, midY - gapH/2, 12, 12);
+    ctx.fillRect(x+o.w-6, midY + gapH/2 - 12, 12, 12);
+  } else {
+    ctx.fillRect(x-6, midY - gapH/2, 12, 12);
+    ctx.fillRect(x-6, midY + gapH/2 - 12, 12, 12);
+  }
+  
+  ctx.lineWidth=1;
+}
+
+function drawDecor(o){
+  const x=o.x-cam.x,y=o.y-cam.y, t=T2*.001;
+  ctx.save();ctx.translate(x,y);
+  
+  // Base shadow
+  ctx.globalAlpha=0.3;ctx.fillStyle='#000';ctx.beginPath();ctx.ellipse(16,28,12,4,0,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;
+
+  switch(o.type) {
+    case 'pot': // Fenious
+      ctx.fillStyle='#3a3834';ctx.fillRect(6,12,20,16); // Pot body
+      ctx.fillStyle='#222';ctx.beginPath();ctx.ellipse(16,12,10,4,0,0,Math.PI*2);ctx.fill(); // Inside
+      ctx.fillStyle='#b86050';ctx.beginPath();ctx.ellipse(16,12,8,3,0,0,Math.PI*2);ctx.fill(); // Soup
+      // Bubbles
+      for(let i=0;i<3;i++) {
+        const by = 12 - (t*20+i*10)%15;
+        const bx = 16 + Math.sin(t*5+i)*6;
+        ctx.fillStyle='rgba(240,160,100,'+(1-((12-by)/15))+')';
+        ctx.beginPath();ctx.arc(bx,by,2,0,Math.PI*2);ctx.fill();
+      }
+      ctx.fillStyle='#5a5854';ctx.fillRect(2,16,28,3); // Handles
+      break;
+    case 'coins': // FIC
+      ctx.fillStyle='#cca840';
+      ctx.beginPath();ctx.moveTo(8,26);ctx.lineTo(24,26);ctx.lineTo(16,10);ctx.fill(); // Coin pile
+      ctx.fillStyle='#f5e4a0';
+      ctx.fillRect(14,8,4,4);ctx.fillRect(10,18,3,3);ctx.fillRect(18,22,5,3); // Sparkles
+      ctx.strokeStyle='rgba(201,168,76,.8)';ctx.strokeRect(0,0,32,32); // Board
+      ctx.fillStyle='rgba(10,8,4,.8)';ctx.fillRect(0,0,32,32);
+      ctx.strokeStyle='#cca840';ctx.beginPath();ctx.moveTo(4,28);ctx.lineTo(10,18);ctx.lineTo(18,22);ctx.lineTo(28,6);ctx.stroke(); // Chart
+      break;
+    case 'camera': // FUM
+      ctx.fillStyle='#222';ctx.fillRect(14,20,4,10);ctx.fillRect(10,28,12,2); // Tripod
+      ctx.fillStyle='#444';ctx.fillRect(8,10,16,10); // Body
+      ctx.fillStyle='#111';ctx.fillRect(12,8,8,4); // Flash
+      ctx.fillStyle='#888';ctx.beginPath();ctx.arc(16,15,4,0,Math.PI*2);ctx.fill(); // Lens
+      ctx.fillStyle='#cceeff';ctx.beginPath();ctx.arc(15,14,1.5,0,Math.PI*2);ctx.fill(); // Lens reflect
+      if (Math.sin(t*4)>0.95) { ctx.fillStyle='rgba(255,255,255,0.8)'; ctx.beginPath();ctx.arc(16,15,12,0,Math.PI*2);ctx.fill(); } // Flash effect
+      break;
+    case 'micStand': // MIC
+      ctx.fillStyle='#444';ctx.fillRect(14,28,4,2);ctx.fillRect(15,10,2,18); // Stand
+      ctx.fillStyle='#111';ctx.beginPath();ctx.arc(16,8,5,0,Math.PI*2);ctx.fill(); // Mic
+      ctx.strokeStyle='#888';ctx.lineWidth=1;
+      for(let i=4;i<=12;i+=2){ctx.beginPath();ctx.moveTo(12,i);ctx.lineTo(20,i);ctx.stroke();} // Grille
+      break;
+    case 'drum': // TIA
+      ctx.fillStyle='#7a3828';ctx.fillRect(6,16,20,12); // Drum body
+      ctx.fillStyle='#a06840';ctx.fillRect(4,14,24,2);ctx.fillRect(4,28,24,2); // Rims
+      ctx.fillStyle='#e8d0a0';ctx.beginPath();ctx.ellipse(16,14,12,4,0,0,Math.PI*2);ctx.fill(); // Drumhead
+      ctx.strokeStyle='#d0b880';ctx.beginPath();ctx.moveTo(8,16);ctx.lineTo(12,28);ctx.moveTo(12,16);ctx.lineTo(8,28);ctx.stroke(); // Strings
+      break;
+    case 'board': // RESUP
+      ctx.fillStyle='#c8c0b0';ctx.fillRect(2,4,28,18); // Whiteboard
+      ctx.strokeStyle='#4a3820';ctx.lineWidth=2;ctx.strokeRect(2,4,28,18); // Frame
+      ctx.fillRect(14,22,4,8);ctx.fillRect(8,28,16,2); // Stand
+      ctx.fillStyle='#604820';ctx.fillRect(10,8,4,4);ctx.fillRect(16,8,8,2); // Notes
+      ctx.fillStyle='#a04040';ctx.beginPath();ctx.moveTo(6,16);ctx.lineTo(14,10);ctx.lineTo(20,14);ctx.lineTo(26,6);ctx.stroke(); // Chart
+      break;
+    case 'heartBox': // F2K
+      ctx.fillStyle='#cca840';ctx.fillRect(8,12,16,16); // Box
+      ctx.fillStyle='#8a6c1e';ctx.fillRect(14,12,4,2); // Slot
+      ctx.fillStyle='#d05060';ctx.beginPath();ctx.moveTo(16,22);ctx.arc(13,18,3,0,Math.PI,true);ctx.arc(19,18,3,0,Math.PI,true);ctx.closePath();ctx.fill(); // Heart
+      ctx.fillStyle='rgba(255,255,255,0.4)';ctx.fillRect(10,14,12,8); // Glass front
+      break;
+    case 'martialDummy': // FVC
+      ctx.fillStyle='#7a5030';ctx.fillRect(14,6,4,22); // Main post
+      ctx.fillStyle='#9a6040';ctx.fillRect(10,26,12,4); // Base
+      ctx.fillRect(6,10,10,2);ctx.fillRect(16,12,10,2);ctx.fillRect(10,18,8,2); // Arms
+      ctx.fillStyle='#cca840';ctx.fillRect(14,4,4,2); // Top cap
+      break;
+    case 'serverNode': // SRC
+      ctx.fillStyle='#222';ctx.fillRect(6,6,20,24); // Rack
+      ctx.strokeStyle='#444';ctx.lineWidth=1;ctx.strokeRect(6,6,20,24);
+      for(let i=8;i<=26;i+=6) {
+        ctx.fillStyle='#111';ctx.fillRect(8,i,16,4); // Server
+        const b = Math.random()>0.5?'#4a90e2':'#50e3c2'; // Blinking lights
+        ctx.fillStyle=b;ctx.fillRect(10,i+1,2,2);ctx.fillRect(14,i+1,2,2);
+      }
+      break;
+    case 'boombox': // DFP
+      ctx.fillStyle='#444';ctx.fillRect(4,14,24,14); // Body
+      ctx.fillStyle='#222';ctx.beginPath();ctx.arc(10,22,4,0,Math.PI*2);ctx.fill();ctx.arc(22,22,4,0,Math.PI*2);ctx.fill(); // Speakers
+      const thump = 1 + Math.sin(t*12)*0.1;
+      ctx.fillStyle='#b8b0a0';ctx.beginPath();ctx.ellipse(10,22,3*thump,3*thump,0,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.ellipse(22,22,3*thump,3*thump,0,0,Math.PI*2);ctx.fill(); // Speaker cones
+      ctx.fillStyle='#888';ctx.fillRect(10,12,12,2); // Handle
+      ctx.fillStyle='#c9a84c';ctx.fillRect(14,16,4,2); // Tape deck
+      break;
+  }
+  ctx.restore();
 }
 function drawBench(o){
   const x=o.x-cam.x,y=o.y-cam.y,D=6;
@@ -1258,7 +1515,7 @@ function draw(t){
     try{
       switch(o.t){
         case'arch':drawArch(o);break;case'col':drawCol(o);break;case'chand':drawChand(o);break;
-        case'booth':drawBooth(o);break;case'rope':drawRope(o);break;case'bench':drawBench(o);break;
+        case'booth':drawBooth(o);break;case'fence':drawFence(o);break;case'decor':drawDecor(o);break;case'bench':drawBench(o);break;
         case'win':drawWin(o);break;case'trophy':drawTrophy(o);break;case'painting':drawPainting(o);break;
         case'fountain':drawFountain(o);break;case'guard':drawGuard(o);break;case'guidePed':drawGuidePed(o);break;
         case'npc':drawNPC(o);break;
@@ -1673,8 +1930,8 @@ function updateUI(){
   $set('qMain','textContent',`Tham quan 5 gian hàng (${Math.min(n,5)}/5)`);
   $set('qMain','className','qi'+(n>=5?' done':''));
   $style('qProg','width',Math.min(n/5*100,100)+'%');
-  $set('hV','textContent',`Đã thăm: ${n}/10`);
-  $set('hS','textContent',`Điểm: ${score}`);
+  $set('hVv','textContent',`${n}/10`);
+  $set('hSv','textContent',`${score}`);
   const vl=$el('visitL');
   if(vl){
     vl.innerHTML='';
@@ -1785,8 +2042,8 @@ function startGame(){
     el.textContent='✕  Vui lòng điền đầy đủ thông tin';return;
   }
   plName=n;plMSSV=m;
-  document.getElementById('hN').textContent='Khách: '+n.substring(0,14);
-  document.getElementById('hM').textContent='MSSV: '+m;
+  document.getElementById('hNv').textContent=n.substring(0,14);
+  document.getElementById('hMv').textContent=m;
   document.getElementById('siteHeader').classList.add('site-hidden');
   document.getElementById('siteFooter').classList.add('site-hidden');
   document.getElementById('startScreen').classList.remove('active');
